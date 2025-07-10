@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chess Game</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: #f0f0f0;
+      font-family: Arial, sans-serif;   
+      height: 100vh;
+      margin: 0;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    #board {
+      display: grid;
+      grid-template-columns: repeat(8, 60px);
+      grid-template-rows: repeat(8, 60px);
+      border: 2px solid #333;
+    }
+    .cell {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      cursor: pointer;
+    }
+    .white {
+      background-color: #f0d9b5;
+    }
+    .black {
+      background-color: #b58863;
+    }
+    .selected {
+      outline: 3px solid red;
+    }
+  </style>
+</head>
+<body>
+  <div id="board"></div>
+
+  <script>
+    const board = document.getElementById('board');
+    const pieces = {
+      r: '♜', n: '♞', b: '♝', q: '♛', k: '♚', p: '♟',
+      R: '♖', N: '♘', B: '♗', Q: '♕', K: '♔', P: '♙'
+    };
+
+    let gameState = [
+      'r','n','b','q','k','b','n','r',
+      'p','p','p','p','p','p','p','p',
+      '','','','','','','','',
+      '','','','','','','','',
+      '','','','','','','','',
+      '','','','','','','','',
+      'P','P','P','P','P','P','P','P',
+      'R','N','B','Q','K','B','N','R'
+    ];
+
+    let selected = null;
+
+    function drawBoard() {
+      board.innerHTML = '';
+      for (let i = 0; i < 64; i++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.classList.add((Math.floor(i / 8) + i) % 2 === 0 ? 'white' : 'black');
+        cell.dataset.index = i;
+        cell.innerText = pieces[gameState[i]] || '';
+
+        cell.addEventListener('click', () => handleClick(i, cell));
+
+        board.appendChild(cell);
+      }
+    }
+
+    function handleClick(index, cell) {
+      if (selected === null && gameState[index] !== '') {
+        selected = index;
+        cell.classList.add('selected');
+      } else if (selected !== null) {
+        gameState[index] = gameState[selected];
+        gameState[selected] = '';
+        selected = null;
+        drawBoard();
+      }
+    }
+
+    drawBoard();
+  </script>
+</body>
+</html>
